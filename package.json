@@ -2,7 +2,7 @@
     "name": "booktrack-backend",
     "version": "1.0.0",
     "description": "API para gerenciamento de leituras - BookTrack",
-    "main": "dist/server.ts",
+    "main": "dist/server.js",
     "scripts": {
         "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
         "build": "tsc",
