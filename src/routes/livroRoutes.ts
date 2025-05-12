@@ -68,7 +68,7 @@ router.delete('/excluir/:id', async (req: any, res) => {
     
     const livroExistente = await LivroRepository.findOne({ where: { id: livroId, id_leitor: userId } });
     if (!livroExistente) {
-      return res.status(404).json({ message: 'Livro não encontrado' });
+      return res.status(404).json({ message: 'Livro não foi encontrado' });
     }
 
     await LivroRepository.remove(livroExistente);
