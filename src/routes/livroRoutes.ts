@@ -1,27 +1,16 @@
-import { Router } from 'express';
-import { checkLivroOwner, authMiddleware } from '../middlewares';
+import express from 'express';
+import { LivroRepository } from '../repositories/livroRepository';
 
-const router = Router();
+const router = express.Router();
 
-// Todas as rotas precisam de autenticação
-router.use(authMiddleware);
-
-// Rotas que precisam verificar se o usuário é dono do livro
-router.put('/livros/:id', checkLivroOwner, async (req, res) => {
-  // Lógica para atualizar o livro
+router.get('/meus-livros', async (req: any, res) => {
+  try {
+    const userId = req.user.id;
+    const livros = await LivroRepository.findByUser(userId);
+    res.json(livros);
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao buscar livros' });
+  }
 });
 
-router.delete('/livros/:id', checkLivroOwner, async (req, res) => {
-  // Lógica para deletar o livro
-});
-
-// Rotas que não precisam verificar o dono
-router.get('/livros', async (req, res) => {
-  // Lógica para listar livros
-});
-
-router.post('/livros', async (req, res) => {
-  // Lógica para criar livro
-});
-
-export default router; 
+export default router;

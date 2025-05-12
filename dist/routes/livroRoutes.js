@@ -1,16 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const checkLivroOwner_1 = require("../middlewares/checkLivroOwner");
-const authMiddleware_1 = require("../middlewares/authMiddleware");
+const middlewares_1 = require("../middlewares");
 const router = (0, express_1.Router)();
 // Todas as rotas precisam de autenticação
-router.use(authMiddleware_1.authMiddleware);
+router.use(middlewares_1.authMiddleware);
 // Rotas que precisam verificar se o usuário é dono do livro
-router.put('/livros/:id', checkLivroOwner_1.checkLivroOwner, async (req, res) => {
+router.put('/livros/:id', middlewares_1.checkLivroOwner, async (req, res) => {
     // Lógica para atualizar o livro
 });
-router.delete('/livros/:id', checkLivroOwner_1.checkLivroOwner, async (req, res) => {
+router.delete('/livros/:id', middlewares_1.checkLivroOwner, async (req, res) => {
     // Lógica para deletar o livro
 });
 // Rotas que não precisam verificar o dono

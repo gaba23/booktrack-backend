@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate, JoinColumn, ManyToOne } from 'typeorm';
 import { LivroStatus } from '../types/LivroStatus';
 import { Length, Min, Max, ValidateIf } from 'class-validator';
+import { User } from './User';
 
 @Entity()
 export class Livro {
@@ -39,4 +40,8 @@ export class Livro {
       this.data_conclusao = new Date();
     }
   }
+
+  @ManyToOne(() => User, (user: User) => user.livros)
+  @JoinColumn({ name: 'id_leitor' })
+  leitor!: User;
 }

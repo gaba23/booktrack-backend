@@ -1,28 +1,49 @@
-import client from '../database/connection'; // Importa a conexão com o banco
+import { AppDataSource } from '../database/data-source';
+import { User } from '../entities/User';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-// Função para adicionar um usuário
-const addUser = async (name: string, email: string) => {
-  try {
-    const query = 'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *';
-    const values = [name, email];
-    
-    const res = await client.query(query, values);
-    console.log('Usuário adicionado:', res.rows[0]);
-    return res.rows[0];
-  } catch (err) {
-    console.error('Erro ao adicionar usuário:', err);
+export class UserService {
+  private static userRepository = AppDataSource.getRepository(User);
+
+  static async register(nome: string, email: string, senha: string) {
+    const emailExistente = await this.userRepository.findOne({ where: { email } });
+    if (emailExistente) {
+      throw new Error('E-mail já está em uso');
+    }
+
+    const hashedPassword = await bcrypt.hash(senha, 10);
+
+    const novoUsuario = this.userRepository.create({
+      nome,
+      email,
+      senha: hashedPassword
+    });
+
+    await this.userRepository.save(novoUsuario);
+
+    const token = jwt.sign({ id: novoUsuario.id }, 'seuSegredoSuperSecreto', { 
+      expiresIn: '1h' 
+    });
+
+    return { user: novoUsuario, token };
   }
-};
 
-// Função para listar todos os usuários
-const getUsers = async () => {
-  try {
-    const res = await client.query('SELECT * FROM users');
-    console.log('Usuários encontrados:', res.rows);
-    return res.rows;
-  } catch (err) {
-    console.error('Erro ao listar usuários:', err);
+  static async login(email: string, senha: string) {
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new Error('E-mail não cadastrado');
+    }
+
+    const isPasswordValid = await bcrypt.compare(senha, user.senha);
+    if (!isPasswordValid) {
+      throw new Error('Senha incorreta');
+    }
+
+    const token = jwt.sign({ id: user.id }, 'seuSegredoSuperSecreto', {
+      expiresIn: '1h'
+    });
+
+    return { user, token };
   }
-};
-
-export { addUser, getUsers };
+}
