@@ -10,5 +10,14 @@ class LivroRepository {
             relations: ['leitor']
         });
     }
+    static async save(livro) {
+        return data_source_1.AppDataSource.getRepository(Livro_1.Livro).save(livro);
+    }
+    static async findOne(options) {
+        return data_source_1.AppDataSource.getRepository(Livro_1.Livro).findOne(options);
+    }
+    static async remove(livro) {
+        await data_source_1.AppDataSource.getRepository(Livro_1.Livro).remove(livro);
+    }
 }
 exports.LivroRepository = LivroRepository;

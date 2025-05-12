@@ -9,6 +9,7 @@ export class User {
 
   @Column()
   @IsNotEmpty({ message: 'Nome é obrigatório' })
+  @MinLength(3, { message: 'Nome deve ter no mínimo 3 caracteres' })
   nome!: string;
 
   @Column({ unique: true })

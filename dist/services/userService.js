@@ -21,7 +21,7 @@ class UserService {
             senha: hashedPassword
         });
         await this.userRepository.save(novoUsuario);
-        const token = jsonwebtoken_1.default.sign({ id: novoUsuario.id }, 'seuSegredoSuperSecreto', {
+        const token = jsonwebtoken_1.default.sign({ id: novoUsuario.id }, process.env.JWT_SECRET, {
             expiresIn: '1h'
         });
         return { user: novoUsuario, token };
@@ -35,7 +35,7 @@ class UserService {
         if (!isPasswordValid) {
             throw new Error('Senha incorreta');
         }
-        const token = jsonwebtoken_1.default.sign({ id: user.id }, 'seuSegredoSuperSecreto', {
+        const token = jsonwebtoken_1.default.sign({ id: user.id }, process.env.JWT_SECRET, {
             expiresIn: '1h'
         });
         return { user, token };

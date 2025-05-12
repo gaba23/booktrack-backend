@@ -22,7 +22,7 @@ export class UserService {
 
     await this.userRepository.save(novoUsuario);
 
-    const token = jwt.sign({ id: novoUsuario.id }, 'seuSegredoSuperSecreto', { 
+    const token = jwt.sign({ id: novoUsuario.id }, process.env.JWT_SECRET!, { 
       expiresIn: '1h' 
     });
 
@@ -40,7 +40,7 @@ export class UserService {
       throw new Error('Senha incorreta');
     }
 
-    const token = jwt.sign({ id: user.id }, 'seuSegredoSuperSecreto', {
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
       expiresIn: '1h'
     });
 

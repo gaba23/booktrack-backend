@@ -29,16 +29,18 @@ const login = async (req, res) => {
     const { email, senha } = req.body;
     try {
         const user = await userRepo.findOneBy({ email });
-        if (!user)
+        if (!user) {
             return res.status(401).json({ message: 'Credenciais inválidas.' });
+        }
         const valid = await (0, authService_1.comparePassword)(senha, user.senha);
-        if (!valid)
+        if (!valid) {
             return res.status(401).json({ message: 'Credenciais inválidas.' });
-        const token = jsonwebtoken_1.default.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        }
+        const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1d' });
         res.json({ token });
     }
     catch (err) {
-        res.status(500).json({ error: 'Erro ao fazer login.' });
+        res.status(500).json({ error: 'Erro ao fazer login.', details: err.message });
     }
 };
 exports.login = login;

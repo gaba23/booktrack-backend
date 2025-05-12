@@ -19,6 +19,9 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     try {
         const { email, senha } = req.body;
+        if (!email || !senha) {
+            return res.status(400).json({ error: 'Email e senha são obrigatórios' });
+        }
         const result = await userService_1.UserService.login(email, senha);
         res.json(result);
     }

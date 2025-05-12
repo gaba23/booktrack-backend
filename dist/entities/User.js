@@ -23,6 +23,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     (0, class_validator_1.IsNotEmpty)({ message: 'Nome é obrigatório' }),
+    (0, class_validator_1.MinLength)(3, { message: 'Nome deve ter no mínimo 3 caracteres' }),
     __metadata("design:type", String)
 ], User.prototype, "nome", void 0);
 __decorate([
