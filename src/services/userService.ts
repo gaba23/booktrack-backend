@@ -47,3 +47,14 @@ export class UserService {
     return { user, token };
   }
 }
+
+export const addUser = async (name: string, email: string) => {
+  const userRepository = AppDataSource.getRepository(User);
+  const user = userRepository.create({ nome: name, email });
+  return await userRepository.save(user);
+};
+
+export const getUsers = async () => {
+  const userRepository = AppDataSource.getRepository(User);
+  return await userRepository.find();
+};

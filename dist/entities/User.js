@@ -11,6 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
+const class_validator_1 = require("class-validator");
+const Livro_1 = require("./Livro");
 let User = class User {
 };
 exports.User = User;
@@ -20,16 +22,23 @@ __decorate([
 ], User.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Nome é obrigatório' }),
     __metadata("design:type", String)
 ], User.prototype, "nome", void 0);
 __decorate([
     (0, typeorm_1.Column)({ unique: true }),
+    (0, class_validator_1.IsEmail)({}, { message: 'E-mail inválido' }),
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, class_validator_1.MinLength)(6, { message: 'Senha deve ter no mínimo 6 caracteres' }),
     __metadata("design:type", String)
 ], User.prototype, "senha", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Livro_1.Livro, (livro) => livro.leitor),
+    __metadata("design:type", Array)
+], User.prototype, "livros", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);

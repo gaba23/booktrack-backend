@@ -13,6 +13,7 @@ exports.Livro = void 0;
 const typeorm_1 = require("typeorm");
 const LivroStatus_1 = require("../types/LivroStatus");
 const class_validator_1 = require("class-validator");
+const User_1 = require("./User");
 let Livro = class Livro {
     updateDataConclusao() {
         if (this.status === LivroStatus_1.LivroStatus.Lido && !this.data_conclusao) {
@@ -63,6 +64,11 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], Livro.prototype, "updateDataConclusao", null);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.livros),
+    (0, typeorm_1.JoinColumn)({ name: 'id_leitor' }),
+    __metadata("design:type", User_1.User)
+], Livro.prototype, "leitor", void 0);
 exports.Livro = Livro = __decorate([
     (0, typeorm_1.Entity)()
 ], Livro);

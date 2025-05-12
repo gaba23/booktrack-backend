@@ -3,31 +3,54 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUsers = exports.addUser = void 0;
-const connection_1 = __importDefault(require("../database/connection")); // Importa a conexão com o banco
-// Função para adicionar um usuário
+exports.getUsers = exports.addUser = exports.UserService = void 0;
+const data_source_1 = require("../database/data-source");
+const User_1 = require("../entities/User");
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+class UserService {
+    static async register(nome, email, senha) {
+        const emailExistente = await this.userRepository.findOne({ where: { email } });
+        if (emailExistente) {
+            throw new Error('E-mail já está em uso');
+        }
+        const hashedPassword = await bcrypt_1.default.hash(senha, 10);
+        const novoUsuario = this.userRepository.create({
+            nome,
+            email,
+            senha: hashedPassword
+        });
+        await this.userRepository.save(novoUsuario);
+        const token = jsonwebtoken_1.default.sign({ id: novoUsuario.id }, 'seuSegredoSuperSecreto', {
+            expiresIn: '1h'
+        });
+        return { user: novoUsuario, token };
+    }
+    static async login(email, senha) {
+        const user = await this.userRepository.findOne({ where: { email } });
+        if (!user) {
+            throw new Error('E-mail não cadastrado');
+        }
+        const isPasswordValid = await bcrypt_1.default.compare(senha, user.senha);
+        if (!isPasswordValid) {
+            throw new Error('Senha incorreta');
+        }
+        const token = jsonwebtoken_1.default.sign({ id: user.id }, 'seuSegredoSuperSecreto', {
+            expiresIn: '1h'
+        });
+        return { user, token };
+    }
+}
+exports.UserService = UserService;
+UserService.userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
 const addUser = async (name, email) => {
-    try {
-        const query = 'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *';
-        const values = [name, email];
-        const res = await connection_1.default.query(query, values);
-        console.log('Usuário adicionado:', res.rows[0]);
-        return res.rows[0];
-    }
-    catch (err) {
-        console.error('Erro ao adicionar usuário:', err);
-    }
+    const userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
+    const user = userRepository.create({ nome: name, email });
+    return await userRepository.save(user);
 };
 exports.addUser = addUser;
-// Função para listar todos os usuários
 const getUsers = async () => {
-    try {
-        const res = await connection_1.default.query('SELECT * FROM users');
-        console.log('Usuários encontrados:', res.rows);
-        return res.rows;
-    }
-    catch (err) {
-        console.error('Erro ao listar usuários:', err);
-    }
+    const userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
+    return await userRepository.find();
 };
 exports.getUsers = getUsers;
