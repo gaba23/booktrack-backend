@@ -22,7 +22,7 @@ API para gerenciamento de leituras, desenvolvida com TypeScript, Express e TypeO
 
 1. Clone o repositório:
 ```bash
-git clone [https://github.com/gaba23/booktrack-backend]
+git clone https://github.com/gaba23/booktrack-backend
 cd booktrack/back
 ```
 
