@@ -22,7 +22,7 @@ API para gerenciamento de leituras, desenvolvida com TypeScript, Express e TypeO
 
 1. Clone o repositório:
 ```bash
-git clone [URL_DO_REPOSITÓRIO]
+git clone [https://github.com/gaba23/booktrack-backend]
 cd booktrack/back
 ```
 
@@ -129,21 +129,4 @@ Content-Type: application/json
 }
 ```
 
-## ⚠️ Regras de Negócio
-
-- Livros com status "Lido" não podem ser editados, apenas excluídos
-- Ao excluir um usuário, todos os seus livros são excluídos automaticamente
-- A avaliação só pode ser adicionada quando o status do livro for "Lido"
-- A avaliação deve ser um número entre 1 e 5
-
-## 🤝 Contribuindo
-
-1. Faça o fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## 📄 Licença
-
-Este projeto está sob a licença ISC. 
+Em BookTrack.postman_colletion.json você pode visualizar o json gerado pelo postman com as rotas da api desta aplicação
