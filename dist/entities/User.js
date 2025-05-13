@@ -37,9 +37,13 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "senha", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Livro_1.Livro, (livro) => livro.leitor),
+    (0, typeorm_1.OneToMany)(() => Livro_1.Livro, (livro) => livro.leitor, {
+        cascade: true,
+        onDelete: 'CASCADE'
+    }),
     __metadata("design:type", Array)
 ], User.prototype, "livros", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);
+// Coloquei o modo de deletar o usuário em cascata para que todos os livros do usuário sejam deletados quando o usuário for deletado

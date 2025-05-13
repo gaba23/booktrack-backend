@@ -4,6 +4,7 @@ import cors from 'cors';
 import { AppDataSource } from './database/data-source';
 import authRoutes from './routes/authRoutes';
 import livroRoutes from './routes/livroRoutes';
+import userRoutes from './routes/userRoutes';
 import { authMiddleware } from './middlewares/authMiddleware';
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(express.json());
 // Rotas
 app.use('/auth', authRoutes);
 app.use('/livros', authMiddleware, livroRoutes);
+app.use('/users', authMiddleware, userRoutes);
 
 // Tratamento de erros global
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

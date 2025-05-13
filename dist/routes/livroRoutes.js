@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const livroRepository_1 = require("../repositories/livroRepository");
 const Livro_1 = require("../entities/Livro");
 const class_validator_1 = require("class-validator");
+const LivroStatus_1 = require("../types/LivroStatus");
 const router = express_1.default.Router();
 router.get('/meus-livros', async (req, res) => {
     try {
@@ -46,6 +47,9 @@ router.put('/editar/:id', async (req, res) => {
         if (!livroExistente) {
             return res.status(404).json({ message: 'Livro não encontrado' });
         }
+        if (livroExistente.status === LivroStatus_1.LivroStatus.Lido) {
+            return res.status(403).json({ message: 'Livros com status "Lido" não podem ser editados' });
+        }
         Object.assign(livroExistente, req.body);
         const errors = await (0, class_validator_1.validate)(livroExistente);
         if (errors.length > 0) {
@@ -64,7 +68,7 @@ router.delete('/excluir/:id', async (req, res) => {
         const livroId = parseInt(req.params.id);
         const livroExistente = await livroRepository_1.LivroRepository.findOne({ where: { id: livroId, id_leitor: userId } });
         if (!livroExistente) {
-            return res.status(404).json({ message: 'Livro não encontrado' });
+            return res.status(404).json({ message: 'Livro não foi encontrado' });
         }
         await livroRepository_1.LivroRepository.remove(livroExistente);
         res.json({ message: 'Livro excluído com sucesso' });

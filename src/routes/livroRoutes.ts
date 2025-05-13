@@ -2,6 +2,7 @@ import express from 'express';
 import { LivroRepository } from '../repositories/livroRepository';
 import { Livro } from '../entities/Livro';
 import { validate } from 'class-validator';
+import { LivroStatus } from '../types/LivroStatus';
 
 const router = express.Router();
 
@@ -46,6 +47,10 @@ router.put('/editar/:id', async (req: any, res) => {
     const livroExistente = await LivroRepository.findOne({ where: { id: livroId, id_leitor: userId } });
     if (!livroExistente) {
       return res.status(404).json({ message: 'Livro não encontrado' });
+    }
+
+    if (livroExistente.status === LivroStatus.Lido) {
+      return res.status(403).json({ message: 'Livros com status "Lido" não podem ser editados' });
     }
 
     Object.assign(livroExistente, req.body);

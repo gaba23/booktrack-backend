@@ -65,7 +65,9 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], Livro.prototype, "updateDataConclusao", null);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.livros),
+    (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.livros, {
+        onDelete: 'CASCADE'
+    }),
     (0, typeorm_1.JoinColumn)({ name: 'id_leitor' }),
     __metadata("design:type", User_1.User)
 ], Livro.prototype, "leitor", void 0);

@@ -41,7 +41,9 @@ export class Livro {
     }
   }
 
-  @ManyToOne(() => User, (user: User) => user.livros)
+  @ManyToOne(() => User, (user: User) => user.livros, {
+    onDelete: 'CASCADE'
+  })
   @JoinColumn({ name: 'id_leitor' })
   leitor!: User;
 }

@@ -20,6 +20,11 @@ export class User {
   @MinLength(6, { message: 'Senha deve ter no mínimo 6 caracteres' })
   senha!: string;
 
-  @OneToMany(() => Livro, (livro: Livro) => livro.leitor)
+  @OneToMany(() => Livro, (livro: Livro) => livro.leitor, {
+    cascade: true,
+    onDelete: 'CASCADE'
+  })
   livros?: Livro[];
 }
+
+// Coloquei o modo de deletar o usuário em cascata para que todos os livros do usuário sejam deletados quando o usuário for deletado
